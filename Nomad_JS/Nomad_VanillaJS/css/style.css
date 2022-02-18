@@ -1,0 +1,5 @@
+/* hidden 이라는 classname을 만들어 주자.  */
+/* CSS code */
+.hidden {
+	display: none;
+}
