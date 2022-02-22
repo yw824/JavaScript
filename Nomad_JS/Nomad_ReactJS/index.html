@@ -14,26 +14,38 @@
     <script type="text/babel">
         const root = document.getElementById("root");
         function App() {
-            const [minutes, setMinutes] = React.useState();
+            // 이제는 state가 모두 쓰이기 때문에 minutes 라는 표현이 애매하다.
+            // amount 라는 변수와 setAmount라는 함수로 이름을 바꾸자.
+            const [amount, setAmount] = React.useState();
+
             // 사용자가 새로 값을 입력하여 값이 바뀔 때마다 호출할 함수
 	        const onChange = (event) => {
-		        console.log("somebody wrote"); // 새로운 내용을 입력하였다고 표시하는 문구
-                setMinutes(event.target.value);
+                setAmount(event.target.value);
 	        };
-            const reset = () => setMinutes(0);
-            
+            const reset = () => setAmount(0);
+            // flipped될 값을  명칭을 flipped로 설정 
+            const [flipped, setFlipped] = React.useState(false);
+
+            // Flip 버튼 누르면 현재 값 모두 reset되도록
+            const onFlip = () => {
+                reset();
+                setFlipped((current) => !current);
+            }
 	        return (
 		        <div>
                     <h1>Super Converter</h1>
 	                <label HTMLFor="minutes">Minutes</label>
-                    {/* input에 value값을 minutes 변수로 할당하자. */}
-                    {/* 그리고 새로운 값이 들어올 때마다 state를 업데이트하고 싶다. -> onchange함수 */}
-	                <input value={minutes} onChange={onChange}
-                        id="minutes" placeholder="Minutes" type="number" /> <br />
-                    {/* minutes input태그 바로 아래 입력한 값 바로 출력되도록 태그 생성 */}
+                    { /* // flipped가 true일 때만 실행 가능, 그리고 값 그대로 실행
+                         // false 일 때는 변환된 값 사용 */}
+	                <input value={flipped? amount*60: amount} onChange={onChange} id="minutes" placeholder="Minutes" type="number" disabled={flipped===true} /> <br />
+                    
 	                <label HTMLFor="hours">Hours</label>
-	                <input value={Math.round(minutes/60)} id="hours" placeholder="Hours" type="number" disabled/> <br />
+                    { /* // flipped가 false일 때만 실행 가능, 그리고 값 그대로 실행
+                         // true일 때는 변환된 값 사용
+                         // hours태그에도 onChange 함수 부여하여 입력 가능하게 해줌 */}
+	                <input value={flipped? amount: Math.round(amount/60)} onChange = {onChange} id="hours" placeholder="Hours" type="number" disabled={flipped===false}/> <br />
                     <button onClick={reset}>Reset</button>
+                    <button onClick={onFlip}>Flip</button>
 		        </div>
 	        );
         }
